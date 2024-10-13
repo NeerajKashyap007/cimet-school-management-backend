@@ -43,3 +43,9 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+
+
+// MONGO_URI = mongodb+srv://bhardwajvarsha49:Varsha1405@school-management-clust.7el4e.mongodb.net/school-management?retryWrites=true&w=majority&appName=school-management-cluster
+
+// JWT_SECRET = nfkjjfjfghjfhjhajhjhafhdhjhfhvbdhbfjbdjbjnbasdjbna
