@@ -1,7 +1,7 @@
 // models/School.js
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const schoolSchema = new mongoose.Schema({
+const schoolSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true },
@@ -10,5 +10,5 @@ const schoolSchema = new mongoose.Schema({
    
 }, { timestamps: true });
 
-const School = mongoose.model('School', schoolSchema);
-module.exports = School;
+const School = model('School', schoolSchema);
+export default School;

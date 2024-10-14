@@ -1,20 +1,21 @@
 // server.js
-const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const cors = require('cors'); // Import cors
-const schoolRoutes = require('./routes/school');
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user');
+import express, { json } from 'express';
+import { connect } from 'mongoose';
+import { config } from 'dotenv';
+import cors from 'cors'; // Import cors
+import schoolRoutes from './routes/school.js';
+import authRoutes from './routes/auth.js';
+import userRoutes from './routes/user.js';
+import studentRoutes from './routes/student.js';
 
 // Initialize environment variables
-dotenv.config();
+config();
 
 // Initialize app
 const app = express();
 
 // Middleware to parse JSON
-app.use(express.json());
+app.use(json());
 
 // Enable CORS for all origins
 app.use(cors({
@@ -24,7 +25,7 @@ app.use(cors({
 }));
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.log(err));
 
@@ -37,15 +38,9 @@ app.get('/', (req, res) => {
 app.use('/api', schoolRoutes);
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
-
+app.use('/student', studentRoutes )
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
-
-
-// MONGO_URI = mongodb+srv://bhardwajvarsha49:Varsha1405@school-management-clust.7el4e.mongodb.net/school-management?retryWrites=true&w=majority&appName=school-management-cluster
-
-// JWT_SECRET = nfkjjfjfghjfhjhajhjhafhdhjhfhvbdhbfjbdjbjnbasdjbna

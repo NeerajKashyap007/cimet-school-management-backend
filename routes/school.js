@@ -1,7 +1,7 @@
-const express = require('express');
-const School = require('../models/School');
+import { Router } from 'express';
+import School from '../models/School.js';
 
-const router = express.Router();
+const router = Router();
 
 // Create new School
 router.post('/add-school', async (req, res) => {
@@ -92,4 +92,4 @@ router.delete('/delete-school/:id', async (req, res) => {
 
 
 
-module.exports = router;
+export default router;

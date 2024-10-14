@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 
-const userSchema = new Schema({
-    schoolId: {
+const studentSchema = new Schema({
+    schoolId:{
         type: Schema.Types.ObjectId,
         ref: 'School',
         required: true
@@ -16,16 +16,17 @@ const userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true },
     class: {
-        type: [String],
+        type: String,
         required: true
     },
     role: {
         type: String,
-        enum: ['student', 'teacher'],
-        required: true
+        default: 'student',
     },
     password: { type: String, required: true },
 }, { timestamps: true });
 
-const User = model('User', userSchema);
-export default User;
+
+const Student = model('Student', studentSchema)
+
+export default Student
