@@ -6,10 +6,10 @@ const router = Router();
 router.post('/add-subject', async (req, res) => {
     try {
 
-        const { schoolId, subjectName, teacher, classId } = req.body
-
-        if (!subjectName || schoolId || !classId) {
-            return res.status(400).json({ message: 'name, classId, and schoolId are required' });
+        const { schoolId, subjectName, teacher, classId } = req.body;
+        console.log("Received data:", req.body);
+        if (!subjectName || !schoolId) {
+            return res.status(400).json({ message: 'name, and schoolId are required' });
         }
 
         const newSubject = new Subject({
@@ -20,7 +20,7 @@ router.post('/add-subject', async (req, res) => {
         })
 
         await newSubject.save();
-        res.status(201).json({ message: 'Subject created successfully', subject: newSubject })
+        res.status(201).json({status:true, message: 'Subject created successfully', subject: newSubject })
 
     } catch (error) {
         res.status(500).json({ message: 'Error creating subject', error });
@@ -54,7 +54,6 @@ router.get('/school/:schoolId', async (req, res) => {
 
 // update subject by ID
 
-
 router.put('/:subjectId', async (req, res) => {
     try {
         const { subjectId } = req.params;
@@ -66,7 +65,7 @@ router.put('/:subjectId', async (req, res) => {
             return res.status(404).json({ message: 'Subject not found' });
         }
 
-        res.status(200).json({ message: 'Subject updated successfully', subject: updatedSubject });
+        res.status(200).json({status:true, message: 'Subject updated successfully', subject: updatedSubject });
     } catch (error) {
         res.status(500).json({ message: 'Error updating subject', error });
     }
@@ -85,9 +84,9 @@ router.delete('/:subjectId', async (req, res) => {
             return res.status(404).json({ message: 'Subject not found' });
         }
 
-        res.status(200).json({ message: 'Subject deleted successfully' });
+        res.status(200).json({status:true, message: 'Subject deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Error deleting subject', error });
+        res.status(500).json({status:false, message: 'Error deleting subject', error });
     }
 });
 
