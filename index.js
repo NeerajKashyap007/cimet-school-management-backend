@@ -8,6 +8,10 @@ import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import studentRoutes from './routes/student.js';
 import teacherRoutes from './routes/teacher.js'
+import classRoutes from './routes/class.js';
+import subjectRoute from './routes/subject.js';
+
+
 // Initialize environment variables
 config();
 
@@ -38,8 +42,11 @@ app.get('/', (req, res) => {
 app.use('/api', schoolRoutes);
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
-app.use('/student', studentRoutes )
-app.use('/teacher', teacherRoutes)
+app.use('/student', studentRoutes );
+app.use('/teacher', teacherRoutes);
+app.use('/subject', subjectRoute)
+app.use('/class', classRoutes)
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

@@ -1,56 +1,60 @@
 import { Router } from "express";
 import Teacher from "../models/Teacher.js";
+import { hash } from "bcrypt";
 
 const router = Router();
 
-router.post('/add-teacher', async(req, res)=>{
+router.post('/add-teacher/:school_id', async(req, res)=>{
 
     try {
+        const { school_id } = req.params;
+        if(!school_id)  return res.status(400).json({ error: 'schoolId  required' });
         const { schoolId, firstname, lastname, gender, email, phone,salary, class: classArray, role, password, } = req.body;
-
+        
         const existingTeacher = await Teacher.findOne({ email });
-
+        
         if (existingTeacher) {
             return res.status(400).json({ error: "Teacher with this email already exists" })
         }
-
+        
         const hashedPassword = await hash(password, 10)
-
-        const newTeacher = new Student({
+        
+        const newTeacher = new Teacher({
             schoolId, firstname, lastname, gender, email, phone, salary,class: classArray, role, password: hashedPassword
         })
-
+        
         await newTeacher.save()
 
         res.status(201).json({ status: true, message: "Teacher Created SuccessFully" })
 
     }
-    catch(error){
-
+    catch(error) {
+        console.error(error);  // Log the error for debugging
+        res.status(500).json({ error: 'Server error' });  // Respond with a server error message
     }
 })
 
-router.get('/get-teacher', async (req, res) => {
+router.get('/get-teacher/:schoolId', async (req, res) => {
 
     try {
-        const { schoolId } = req.query;
+        const { schoolId } = req.params;
         // Validate input
         if (!schoolId) {
             return res.status(400).json({ error: 'schoolId  required' });
         }
 
         // Find users by schoolId and role
-        const teacher = await teacher.find({ schoolId });
+        const teacher = await Teacher.find({ schoolId });
 
         // Check if any students are found
         if (teacher.length === 0) {
             return res.status(200).json({ status: true, data: [], message: 'No data found' });
         }
         // Send found users
-        res.status(200).json({ status: true, data: students });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ status: false, error: 'Server error' });
+        res.status(200).json({ status: true, data: teacher });
+    } catch(error) {
+        console.error(error);  // Log the error for debugging
+        res.status(500).json({ error: 'Server error' });  // Respond with a server error message
     }
 });
 

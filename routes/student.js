@@ -48,7 +48,6 @@ router.get('/get-students', async (req, res) => {
         // Find users by schoolId and role
         const students = await Student.find({ schoolId });
 
-        // Check if any students are found
         if (students.length === 0) {
             return res.status(200).json({ status: true, data: [], message: 'No Student data found' });
         }
