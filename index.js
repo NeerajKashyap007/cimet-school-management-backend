@@ -7,7 +7,7 @@ import schoolRoutes from './routes/school.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import studentRoutes from './routes/student.js';
-
+import teacherRoutes from './routes/teacher.js'
 // Initialize environment variables
 config();
 
@@ -39,6 +39,7 @@ app.use('/api', schoolRoutes);
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/student', studentRoutes )
+app.use('/teacher', teacherRoutes)
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

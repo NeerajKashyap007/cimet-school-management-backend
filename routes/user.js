@@ -111,7 +111,7 @@ router.post('/user-login', async (req, res) => {
 
     try {
         // Check if the user exists in the database
-        const user = await findOne({ email });
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({ status: false, message: 'Invalid email ' });
         }

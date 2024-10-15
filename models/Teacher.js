@@ -23,7 +23,6 @@ const teacherSchema = new Schema({
     role: {
         type: String,
         default: 'teacher',
-        required: true
     },
     password: { type: String, required: true },
 }, { timestamps: true });

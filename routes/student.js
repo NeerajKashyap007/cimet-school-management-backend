@@ -8,7 +8,6 @@ router.post('/add-student', async (req, res) => {
     try {
         const { schoolId, firstname, lastname, gender, email, phone, class: classArray, role, password, } = req.body;
 
-
         const existingStud = await Student.findOne({ email });
 
         if (existingStud) {
@@ -16,7 +15,6 @@ router.post('/add-student', async (req, res) => {
         }
 
         const hashedPassword = await hash(password, 10)
-
 
         const newStd = new Student({
             schoolId, firstname, lastname, gender, email, phone, class: classArray, role, password: hashedPassword
@@ -95,5 +93,50 @@ router.put('/update-student/:id', async (req, res) => {
     }
 
 })
+
+
+router.delete('/delete-student/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await Student.findByIdAndDelete(id);
+        if (!result) {
+            return res.status(404).json({ error: 'user not found' });
+        }
+        res.json({ status: true, message: "Student's data deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: false, error: 'Server error' });
+    }
+});
+
+
+router.post('/student-login', async (req, res) => {
+    const { schoolId, email, password } = req.body;
+
+    try {
+        // Check if the user exists in the database
+        const user = await Student.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ status: false, message: 'Invalid email ' });
+        }
+
+        // Check if the password matches 
+        const validPassword = compare(password, user.password);
+        if (!validPassword) {
+            return res.status(401).json({ status: false, message: 'Invalid  password' });
+        }
+
+        if (user.schoolId.toString() !== schoolId) {
+            return res.status(401).json({ status: false, message: 'Student does not exist for this school' });
+        }
+        // Generate a JWT token
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Response with the token and user
+        res.json({ status: true, token, user, message: "LogIn SuccessFully" });
+    } catch (error) {
+        res.status(500).json({ status: false, message: 'Server error' });
+    }
+});
 
 export default router;
