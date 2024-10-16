@@ -20,7 +20,7 @@ const teacherSchema = new Schema({
         required: true,
         validate: {
             validator: function(v) {
-                return /\d{10}/.test(v);  // Example regex for a 10-digit phone number
+                return /\d{10}/.test(v);
             },
             message: props => `${props.value} is not a valid phone number!`
         }
@@ -30,7 +30,7 @@ const teacherSchema = new Schema({
         type: String },
     class: {
         type: Schema.Types.ObjectId,
-        ref: 'Class',  // Reference to the Class schema
+        ref: 'Class',
         required: true
     },
     

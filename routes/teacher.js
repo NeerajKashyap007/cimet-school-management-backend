@@ -24,13 +24,12 @@ router.post('/add-teacher/:school_id', async(req, res)=>{
         })
         
         await newTeacher.save()
-
         res.status(201).json({ status: true, message: "Teacher Created SuccessFully" })
 
     }
     catch(error) {
-        console.error(error);  // Log the error for debugging
-        res.status(500).json({ error: 'Server error' });  // Respond with a server error message
+        console.error(error);
+        res.status(500).json({ error: 'Server error' }); 
     }
 })
 
@@ -38,37 +37,31 @@ router.get('/get-teacher/:schoolId', async (req, res) => {
 
     try {
         const { schoolId } = req.params;
-        // Validate input
         if (!schoolId) {
             return res.status(400).json({ error: 'schoolId  required' });
         }
 
-        // Find users by schoolId and role
-        const teacher = await Teacher.find({ schoolId });
+        const teacher = await Teacher.find({ schoolId }).populate('class');
 
-        // Check if any students are found
         if (teacher.length === 0) {
             return res.status(200).json({ status: true, data: [], message: 'No data found' });
         }
-        // Send found users
         res.status(200).json({ status: true, data: teacher });
     } catch(error) {
-        console.error(error);  // Log the error for debugging
-        res.status(500).json({ error: 'Server error' });  // Respond with a server error message
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
     }
 });
 
 router.put('/update-teacher/:id', async (req, res) => {
     try {
-        const { id } = req.params; // user id 
-        const { schoolId, firstname, lastname, gender, email, phone, class: classArray, role } = req.body;
+        const { id } = req.params;
+        const { schoolId, firstname, lastname, gender,salary, email, phone, class: classArray, role } = req.body;
 
-        // Find the user by ID
         let teacher = await Teacher.findById(id);
         if (!teacher) {
             return res.status(404).json({ status: false, error: 'User not found' });
         }
-        // Update fields if provided in request body 
         teacher.schoolId = schoolId || teacher.schoolId;
         teacher.firstname = firstname || teacher.firstname;
         teacher.lastname = lastname || teacher.lastname;
@@ -81,7 +74,7 @@ router.put('/update-teacher/:id', async (req, res) => {
         // Save the updated user 
         await teacher.save();
 
-        res.status(200).json({ status: true, message: 'Student updated successfully', teacher });
+        res.status(200).json({ status: true, message: 'Teacher data updated successfully', teacher });
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: false, error: 'Server error' });
@@ -114,7 +107,6 @@ router.post('/teacher-login', async (req, res) => {
             return res.status(401).json({ status: false, message: 'Invalid email ' });
         }
 
-        // Check if the password matches 
         const validPassword = compare(password, user.password);
         if (!validPassword) {
             return res.status(401).json({ status: false, message: 'Invalid  password' });
@@ -123,11 +115,9 @@ router.post('/teacher-login', async (req, res) => {
         if (user.schoolId.toString() !== schoolId) {
             return res.status(401).json({ status: false, message: 'Teacher does not exist for this school' });
         }
-        // Generate a JWT token
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        // Response with the token and user
-        res.json({ status: true, token, user, message: "LogIn SuccessFully" });
+        res.json({ status: true, token, userData:user, message: "LogIn SuccessFully" });
     } catch (error) {
         res.status(500).json({ status: false, message: 'Server error' });
     }

@@ -21,6 +21,8 @@ router.post('/add-class/:school_id', async(req, res)=>{
             teachers
         })
         await newClass.save();
+
+        
         res.status(201).json({status:true, message: 'Class created successfully', class: newClass });
 
     }catch(error){
@@ -46,7 +48,7 @@ router.get('/:schoolId', async (req, res) => {
 router.get('/getSingleClass/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const classData = await Class.findById(id).populate('subjects students teachers');
+        const classData = await Class.findById(id).populate('subjects students teachers')
         if (!classData) {
             return res.status(404).json({ message: 'Class not found' });
         }

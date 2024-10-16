@@ -33,7 +33,7 @@ router.post('/add-subject', async (req, res) => {
 router.get('/class/:classId', async (req, res) => {
     try {
         const { classId} = req.params;
-        const subjects = await Subject.find({ classId });  // Find subjects by classId and schoolId
+        const subjects = await Subject.find({ classId });
         res.status(200).json(subjects);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching subjects', error });
@@ -45,7 +45,7 @@ router.get('/class/:classId', async (req, res) => {
 router.get('/school/:schoolId', async (req, res) => {
     try {
         const { schoolId} = req.params;
-        const subjects = await Subject.find({ schoolId });  // Find subjects by classId and schoolId
+        const subjects = await Subject.find({ schoolId });
         res.status(200).json(subjects);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching subjects', error });
@@ -57,7 +57,7 @@ router.get('/school/:schoolId', async (req, res) => {
 router.put('/:subjectId', async (req, res) => {
     try {
         const { subjectId } = req.params;
-        const updates = req.body;  // Get the update data from request body
+        const updates = req.body;
 
         const updatedSubject = await Subject.findByIdAndUpdate(subjectId, updates, { new: true });
         

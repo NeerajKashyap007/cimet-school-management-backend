@@ -46,7 +46,7 @@ router.get('/get-students', async (req, res) => {
         }
 
         // Find users by schoolId and role
-        const students = await Student.find({ schoolId });
+        const students = await Student.find({ schoolId }).populate('class');
 
         if (students.length === 0) {
             return res.status(200).json({ status: true, data: [], message: 'No Student data found' });
@@ -62,7 +62,8 @@ router.get('/get-students', async (req, res) => {
 
 router.put('/update-student/:id', async (req, res) => {
     try {
-        const { id } = req.params; // user id 
+        const { id } = req.params;
+        console.log("ID", id)
         const { schoolId, firstname, lastname, gender, email, phone, class: classArray, role } = req.body;
 
         // Find the user by ID
@@ -71,7 +72,6 @@ router.put('/update-student/:id', async (req, res) => {
             return res.status(404).json({ status: false, error: 'User not found' });
         }
 
-        // Update fields if provided in request body 
         student.schoolId = schoolId || student.schoolId;
         student.firstname = firstname || student.firstname;
         student.lastname = lastname || student.lastname;
@@ -84,7 +84,7 @@ router.put('/update-student/:id', async (req, res) => {
         // Save the updated user 
         await student.save();
 
-        res.status(200).json({ status: true, message: 'Student updated successfully', student });
+        res.status(200).json({ status: true, message: 'Student updated successfully',userData: student });
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: false, error: 'Server error' });
@@ -132,7 +132,7 @@ router.post('/student-login', async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // Response with the token and user
-        res.json({ status: true, token, user, message: "LogIn SuccessFully" });
+        res.json({ status: true, token, userData:user, message: "LogIn SuccessFully" });
     } catch (error) {
         res.status(500).json({ status: false, message: 'Server error' });
     }
