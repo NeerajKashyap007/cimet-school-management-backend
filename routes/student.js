@@ -113,13 +113,11 @@ router.post('/student-login', async (req, res) => {
     const { schoolId, email, password } = req.body;
 
     try {
-        // Check if the user exists in the database
         const user = await Student.findOne({ email });
         if (!user) {
             return res.status(401).json({ status: false, message: 'Invalid email ' });
         }
 
-        // Check if the password matches 
         const validPassword = compare(password, user.password);
         if (!validPassword) {
             return res.status(401).json({ status: false, message: 'Invalid  password' });
@@ -128,10 +126,8 @@ router.post('/student-login', async (req, res) => {
         if (user.schoolId.toString() !== schoolId) {
             return res.status(401).json({ status: false, message: 'Student does not exist for this school' });
         }
-        // Generate a JWT token
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        // Response with the token and user
         res.json({ status: true, token, userData:user, message: "LogIn SuccessFully" });
     } catch (error) {
         res.status(500).json({ status: false, message: 'Server error' });

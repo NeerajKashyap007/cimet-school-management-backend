@@ -55,7 +55,7 @@ router.get('/get-teacher/:schoolId', async (req, res) => {
 
 router.put('/update-teacher/:id', async (req, res) => {
     try {
-        const { id } = req.params;
+                const { id } = req.params;
         const { schoolId, firstname, lastname, gender,salary, email, phone, class: classArray, role } = req.body;
 
         let teacher = await Teacher.findById(id);
@@ -101,7 +101,6 @@ router.post('/teacher-login', async (req, res) => {
     const { schoolId, email, password } = req.body;
 
     try {
-        // Check if the user exists in the database
         const user = await Teacher.findOne({ email });
         if (!user) {
             return res.status(401).json({ status: false, message: 'Invalid email ' });
