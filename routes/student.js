@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import Student from '../models/Student.js';
-import { hash } from 'bcrypt';
-const router = Router();
+import { compare, hash } from 'bcrypt';
 import jwt from 'jsonwebtoken';
+
+const router = Router();
 
 router.post('/add-student', async (req, res) => {
     try {
@@ -40,18 +41,15 @@ router.get('/get-students', async (req, res) => {
 
     try {
         const { schoolId } = req.query;
-        // Validate input
         if (!schoolId) {
             return res.status(400).json({ error: 'schoolId  required' });
         }
 
-        // Find users by schoolId and role
         const students = await Student.find({ schoolId }).populate('class');
 
         if (students.length === 0) {
             return res.status(200).json({ status: true, data: [], message: 'No Student data found' });
         }
-        // Send found users
         res.status(200).json({ status: true, data: students });
     } catch (error) {
         console.error(error);
@@ -66,7 +64,6 @@ router.put('/update-student/:id', async (req, res) => {
         console.log("ID", id)
         const { schoolId, firstname, lastname, gender, email, phone, class: classArray, role } = req.body;
 
-        // Find the user by ID
         let student = await Student.findById(id);
         if (!student) {
             return res.status(404).json({ status: false, error: 'User not found' });
@@ -81,7 +78,6 @@ router.put('/update-student/:id', async (req, res) => {
         student.class = classArray || student.class;
         student.role = role || student.role;
 
-        // Save the updated user 
         await student.save();
 
         res.status(200).json({ status: true, message: 'Student updated successfully',userData: student });
@@ -113,23 +109,23 @@ router.post('/student-login', async (req, res) => {
     const { schoolId, email, password } = req.body;
 
     try {
-        const user = await Student.findOne({ email });
+
+        const user = await Student.findOne({ email }).populate('schoolId class');
         if (!user) {
             return res.status(401).json({ status: false, message: 'Invalid email ' });
         }
-
-        const validPassword = compare(password, user.password);
+        const validPassword = await compare(password, user.password);
         if (!validPassword) {
             return res.status(401).json({ status: false, message: 'Invalid  password' });
         }
-
-        if (user.schoolId.toString() !== schoolId) {
+        
+        if (user.schoolId._id.toString() !== schoolId) {
             return res.status(401).json({ status: false, message: 'Student does not exist for this school' });
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
         res.json({ status: true, token, userData:user, message: "LogIn SuccessFully" });
     } catch (error) {
+        console.log("error", error)
         res.status(500).json({ status: false, message: 'Server error' });
     }
 });

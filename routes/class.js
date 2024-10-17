@@ -5,7 +5,6 @@ const router = Router();
 
 router.post('/add-class/:school_id', async(req, res)=>{
     try{
-        // const {school_id} = req.params
         
         const { schoolId, className, section, subjects, students, teachers } = req.body;
 

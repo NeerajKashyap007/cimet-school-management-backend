@@ -1,8 +1,7 @@
-// server.js
 import express, { json } from 'express';
 import { connect } from 'mongoose';
 import { config } from 'dotenv';
-import cors from 'cors'; // Import cors
+import cors from 'cors';
 import schoolRoutes from './routes/school.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
@@ -10,15 +9,16 @@ import studentRoutes from './routes/student.js';
 import teacherRoutes from './routes/teacher.js'
 import classRoutes from './routes/class.js';
 import subjectRoute from './routes/subject.js';
+import assgnmentRoute from './routes/assignment.js';
 
-
-// Initialize environment variables
 config();
 
-// Initialize app
+//  Initialize app
+
 const app = express();
 
 // Middleware to parse JSON
+
 app.use(json());
 
 // Enable CORS for all origins
@@ -44,8 +44,9 @@ app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/student', studentRoutes );
 app.use('/teacher', teacherRoutes);
-app.use('/subject', subjectRoute)
-app.use('/class', classRoutes)
+app.use('/subject', subjectRoute);
+app.use('/class', classRoutes);
+app.use('/assignment', assgnmentRoute)
 
 // Start the server
 const PORT = process.env.PORT || 5000;
