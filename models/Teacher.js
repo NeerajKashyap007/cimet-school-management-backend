@@ -7,14 +7,24 @@ const teacherSchema = new Schema({
         required: true
     },
     firstname: { type: String, required: true },
-    lastname: { type: String, required: true },
+    lastname: { type: String },
     gender: {
         type: String,
         enum: ['male', 'female'],
         required: true
     },
-    email: { type: String, required: true, unique: true, index: true },
-
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        index: true,
+        validate: {
+            validator: function (v) {
+                return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
+            },
+            message: props => `${props.value} is not a valid email!`
+        }
+    },
     phone: {
         type: String,
         required: true,
@@ -38,7 +48,16 @@ const teacherSchema = new Schema({
         type: String,
         default: 'teacher',
     },
-    password: { type: String, required: true },
+    password: {
+        type: String,
+        required: true,
+        validate: {
+            validator: function (v) {
+                return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(v);
+            },
+            message: props => `Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number`
+        }
+    }
 }, { timestamps: true });
 
 

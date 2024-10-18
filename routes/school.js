@@ -32,6 +32,7 @@ router.post('/add-school', async (req, res) => {
 });
 
 
+
 router.get('/schools', async (req, res) => {
     try {
         const schools = await School.find();
@@ -42,6 +43,22 @@ router.get('/schools', async (req, res) => {
     }
 });
 
+// geg school by school id
+
+
+router.get('/schools/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const school = await School.findById(id);
+        if (!school) {
+            return res.status(404).json({ error: 'School not found' });
+        }
+        res.json(school);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch school' }); 
+    }
+});
 
 
 // // Update existing school

@@ -2,6 +2,11 @@ import { Schema, model } from "mongoose";
 
 const assignmentSchema = new Schema({
 
+    schoolId:{
+        type:Schema.Types.ObjectId,
+        ref:'School',
+        required: true
+    },
     subjectId: {
         type: Schema.Types.ObjectId,
         ref: 'Subject',
@@ -14,7 +19,6 @@ const assignmentSchema = new Schema({
         ref: 'Class',
         required: true,
     },
-
     teacherId: {
         type: Schema.Types.ObjectId,
         ref: 'Teacher'

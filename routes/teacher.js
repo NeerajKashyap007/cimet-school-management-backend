@@ -30,9 +30,16 @@ router.post('/add-teacher/:school_id', async(req, res)=>{
     }
     catch(error) {
         console.error(error);
+
+        if (error.name === 'ValidationError') {
+            const validationErrors = Object.values(error.errors).map(err => err.message);
+            return res.status(400).json({ status: false, error: validationErrors });
+        }
         res.status(500).json({status: false, error: 'Server error' }); 
     }
 })
+
+// get teacher for perticular school
 
 router.get('/get-teacher/:schoolId', async (req, res) => {
 
@@ -43,12 +50,32 @@ router.get('/get-teacher/:schoolId', async (req, res) => {
         }
 
         const teacher = await Teacher.find({ schoolId }).populate('class');
-
         if (teacher.length === 0) {
             return res.status(200).json({ status: true, data: [], message: 'No data found' });
         }
         res.status(200).json({ status: true, data: teacher });
     } catch(error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+// get teacher for perticular class in specific school
+// Route to get teachers by schoolId and classId
+router.get('/get-teacher/:schoolId/:classId', async (req, res) => {
+    try {
+        const { schoolId, classId } = req.params;
+        if (!schoolId || !classId) {
+            return res.status(400).json({ error: 'schoolId and classId are required' });
+        }
+
+        const teachers = await Teacher.find({ schoolId, class: classId }).populate('class').populate('schoolId');
+        if (teachers.length === 0) {
+            return res.status(200).json({ status: true, data: [], message: 'No data found' });
+        }
+        res.status(200).json({ status: true, data: teachers });
+    } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
     }

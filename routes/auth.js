@@ -37,14 +37,11 @@ router.post('/login', async (req, res) => {
         if (!admin) {
             return res.status(401).json({ status: false, message: 'Invalid email ' });
         }
-
-        const validPassword = compare(password, admin.password);
+        const validPassword = await compare(password, admin.password);
         if (!validPassword) {
             return res.status(401).json({ status: false, message: 'Invalid  password' });
         }
-
         const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
         res.json({ status: true, token,userData:{role: 'admin' },  message: 'Admin Login SuccessFully' });
     } catch (error) {
         res.status(500).json({ status: false, message: 'Server Key error' });

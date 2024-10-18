@@ -9,13 +9,13 @@ const router = Router()
 router.post('/add-assignment', async(req,res)=>{
     try{
 
-     const {  title, description,classId,teacherId, subjectId } = req.body ;
+     const {  title, description,classId,schoolId, teacherId, subjectId } = req.body ;
 
     if(!classId || !subjectId ){
         return res.status(400).json({status: false, message:'Class  and Subject is required' })
     }
     const newAssignment = new Assignment ({
-        title, description,classId,teacherId, subjectId
+        title, description,classId,schoolId,teacherId, subjectId
     })
 
     await newAssignment.save();
@@ -38,6 +38,20 @@ router.get('/:classId', async(req,res)=>{
         // console.log('CLASS', classId)
 
         const assignments = await Assignment.find({classId}).populate('subjectId classId');
+       console.log("DDD", assignments)
+        res.status(200).json(assignments)
+    }catch(error){
+        res.status(500).json({ message: 'Error fetching Assignment', error });
+    }
+
+})
+
+router.get('/:schoolId', async(req,res)=>{
+    try{
+
+        const {schoolId} = req.params;
+        console.log('School',schoolId)
+        const assignments = await Assignment.find({schoolId}).populate('subjectId classId');
        console.log("DDD", assignments)
         res.status(200).json(assignments)
     }catch(error){
