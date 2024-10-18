@@ -51,12 +51,12 @@ const teacherSchema = new Schema({
     password: {
         type: String,
         required: true,
-        validate: {
-            validator: function (v) {
-                return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(v);
-            },
-            message: props => `Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number`
-        }
+        // validate: {
+        //     validator: function (v) {
+        //         return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(v);
+        //     },
+        //     message: props => `Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number`
+        // }
     }
 }, { timestamps: true });
 

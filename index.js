@@ -10,6 +10,8 @@ import teacherRoutes from './routes/teacher.js'
 import classRoutes from './routes/class.js';
 import subjectRoute from './routes/subject.js';
 import assgnmentRoute from './routes/assignment.js';
+import assignmentSubmissionRoute from './routes/assignmentSubmission.js'
+
 
 config();
 
@@ -46,7 +48,8 @@ app.use('/student', studentRoutes );
 app.use('/teacher', teacherRoutes);
 app.use('/subject', subjectRoute);
 app.use('/class', classRoutes);
-app.use('/assignment', assgnmentRoute)
+app.use('/assignment', assgnmentRoute);
+app.use('/submission', assignmentSubmissionRoute);
 
 // Start the server
 const PORT = process.env.PORT || 5000;

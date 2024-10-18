@@ -58,6 +58,30 @@ router.get('/get-students', async (req, res) => {
 });
 
 
+// get student of class
+
+router.get('/class/:schoolId/:classId', async (req, res) => {
+
+    try {
+        const {schoolId, classId } = req.query;
+        if (!classId || !schoolId) {
+            return res.status(400).json({ error: 'classId  and School Id required' });
+        }
+
+        const students = await Student.find({ classId,  schoolId}).populate('class ');
+
+        if (students.length === 0) {
+            return res.status(200).json({ status: true, data: [], message: 'No Student data found' });
+        }
+        res.status(200).json({ status: true, data: students });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: false, error: 'Server error' });
+    }
+});
+
+
+
 router.put('/update-student/:id', async (req, res) => {
     try {
         const { id } = req.params;
