@@ -64,12 +64,13 @@ router.get('/class/:schoolId/:classId', async (req, res) => {
 
     try {
         const {schoolId, classId } = req.query;
+        console.log("RUERY", schoolId, classId  )
         if (!classId || !schoolId) {
             return res.status(400).json({ error: 'classId  and School Id required' });
         }
 
         const students = await Student.find({ classId,  schoolId}).populate('class ');
-
+        console.log("DATA", students)
         if (students.length === 0) {
             return res.status(200).json({ status: true, data: [], message: 'No Student data found' });
         }
