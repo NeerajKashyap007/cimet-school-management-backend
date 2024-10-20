@@ -19,7 +19,6 @@ const authenticateToken = (req, res, next) => {
 
             return res.status(403).json({ status: false, message: 'Token is not valid' });
         }
-
         // Token is valid, attach the decoded user data to the request object
         req.user = decodedToken;
         next();
