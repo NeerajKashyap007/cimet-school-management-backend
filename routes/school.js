@@ -1,20 +1,18 @@
 import { Router } from 'express';
 import School from '../models/School.js';
+import authenticateToken from '../middleware/auth.js';
 
 const router = Router();
 
 // Create new School
-router.post('/add-school', async (req, res) => {
+router.post('/add-school',authenticateToken, async (req, res) => {
     try {
         const { name, email, phone, address, moto } = req.body;
-
         // Check if email already exists
         const existingSchool = await School.findOne({ email });
         if (existingSchool) {
             return res.status(400).json({ error: 'School with this email already exists' });
         }
-
-        // Create new School
         const newSchool = new School({
             name,
             email,
