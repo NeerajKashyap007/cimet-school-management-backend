@@ -25,7 +25,8 @@ app.use(json());
 
 // Enable CORS for all origins
 app.use(cors({
-    origin: 'http://localhost:5173',
+    // origin: 'http://localhost:5173',
+    origin: ["http://localhost:5173","https://deploy-mern-1whq.vercel.app"]
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
