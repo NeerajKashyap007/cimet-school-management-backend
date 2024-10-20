@@ -44,7 +44,7 @@ router.post('/login', async (req, res) => {
         const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ status: true, token,userData:{role: 'admin' },  message: 'Admin Login SuccessFully' });
     } catch (error) {
-
+          console.log("error", error)
         res.status(500).json({ status: false, message: 'Server Key error', error: error });
     }
 });
