@@ -11,19 +11,17 @@ const authenticateToken = (req, res, next) => {
         return res.sendStatus(401);
     }
 
-    jwt.verify(token, SECRET_KEY, (err, user) => {
+    jwt.verify(token, SECRET_KEY, (err, decodedToken) => {
         if (err) {
             if (err.name === 'TokenExpiredError') {
                 return res.status(403).json({ status: false, message: 'Token has expired' });
             }
 
-            return res.status(403).json({ status: false, message: 'Token not valid' });
+            return res.status(403).json({ status: false, message: 'Token is not valid' });
         }
-        const currentTime = Math.floor(Date.now() / 1000); // Get current time in seconds
-        if (decodedToken.exp < currentTime) {
-            return res.status(403).json({ status: false, message: 'Token has expired' });
-        }
-        req.user = user;
+
+        // Token is valid, attach the decoded user data to the request object
+        req.user = decodedToken;
         next();
     });
 };
